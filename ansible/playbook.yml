@@ -1,0 +1,14 @@
+---
+  # input variables:
+  #   is_guest: (bool): whether we should provision a host or a guest KVMi image
+- hosts: all
+  become: true
+  pre_tasks:
+
+    - name: update the apt cache
+      apt:
+        update_cache: yes
+  tasks:
+    - name: debug
+      debug:
+        var: is_guest

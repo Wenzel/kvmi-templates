@@ -34,12 +34,15 @@
     {
       "type": "shell",
       "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "prep.sh",
+      "script": "scripts/prep.sh",
       "expect_disconnect": true
     },
     {
       "type": "ansible",
-      "playbook_file": "kvmi-host.yaml"
+      "playbook_file": "ansible/playbook.yml",
+      "extra_arguments": [
+        "--extra-vars", "{is_guest:{{user `is_guest`}}}"
+      ]
     }
   ]
 }
