@@ -8,7 +8,7 @@
     - name: update the apt cache
       apt:
         update_cache: yes
-  tasks:
-    - name: debug
-      debug:
-        var: is_guest
+  roles:
+    - kvm
+    - libvirt
+    - qemu

@@ -1,0 +1,7 @@
+- name: install libvirt
+  apt:
+    name:
+      - libvirt-daemon
+      - libvirt-daemon-system
+      - libvirt-daemon-system-systemd
+    state: present
