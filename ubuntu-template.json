@@ -6,7 +6,7 @@
     {
       "accelerator": "kvm",
       "memory": 2048,
-      "CPUs": 6,
+      "CPUs": "{{ user `cpus` }}",
       "disk_interface": "virtio",
       "disk_size": 102400,
       "format": "qcow2",

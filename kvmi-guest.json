@@ -1,3 +1,4 @@
 {
-    "image_type": "guest"
+    "image_type": "guest",
+    "cpus": "2"
 }
