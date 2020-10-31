@@ -10,14 +10,15 @@
       "disk_interface": "virtio",
       "disk_size": 102400,
       "format": "qcow2",
+      "headless": true,
       "iso_checksum": "sha256:443511f6bf12402c12503733059269a2e10dec602916c0a75263e5d990f6bb93",
       "iso_url": "https://releases.ubuntu.com/20.04.1/ubuntu-20.04.1-live-server-amd64.iso",
       "net_device": "virtio-net",
       "output_directory": "out",
       "ssh_password": "{{user `ssh_password`}}",
       "ssh_username": "demo",
-      "ssh_timeout": "20m",
-      "ssh_handshake_attempts": 50,
+      "ssh_timeout": "30m",
+      "ssh_handshake_attempts": 100,
       "type": "qemu",
       "vm_name": "kvmi-host",
       "boot_wait": "2s",
@@ -27,7 +28,8 @@
         "<enter>"
       ],
       "http_directory": "www",
-      "shutdown_command": "sudo -S shutdown -P now"
+      "shutdown_command": "sudo -S shutdown -P now",
+      "skip_compaction": false
     }
   ],
   "provisioners": [
@@ -41,7 +43,7 @@
       "type": "ansible",
       "playbook_file": "ansible/playbook.yml",
       "extra_arguments": [
-        "--extra-vars", "{is_guest:{{user `is_guest`}}}"
+        "--extra-vars", "image_type={{user `image_type`}}"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 ---
   # input variables:
-  #   is_guest: (bool): whether we should provision a host or a guest KVMi image
+  #   image_type: (str): whether we should provision a host or a guest KVMi image ("guest" | "host")
 - hosts: all
   become: true
   pre_tasks:
@@ -10,5 +10,15 @@
         update_cache: yes
   roles:
     - kvm
-    - libvirt
-    - qemu
+
+    - role: libbdvmi
+      when: image_type == 'guest'
+
+    - role: hvmi
+      when: image_type == 'guest'
+
+    - role: libvirt
+      when: image_type == 'host'
+
+    - role: qemu
+      when: image_type == 'host'
