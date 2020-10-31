@@ -1,0 +1,31 @@
+- name: install the packages needed to build hvmi
+  apt:
+    name:
+      - cmake
+      - libjsoncpp-dev
+    state: present
+
+- name: fetch the hvmi sources
+  git:
+    repo: https://github.com/hvmi/hvmi.git
+    dest: /usr/src/hvmi
+    version: master
+    recursive: yes
+
+- name: install and build hvmi
+  shell: |
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release ..
+    make
+    make install
+    cd ../daemon
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release ..
+    make
+    make install
+    cd ..
+    rm -rf build daemon/build
+  args:
+    chdir: /usr/src/hvmi
