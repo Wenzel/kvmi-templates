@@ -3,6 +3,8 @@
   #   image_type: (str): whether we should provision a host or a guest KVMi image ("guest" | "host")
 - hosts: all
   become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   pre_tasks:
 
     - name: update the apt cache
