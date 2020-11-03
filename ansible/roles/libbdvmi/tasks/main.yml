@@ -5,6 +5,8 @@
       - libxen-dev
       - pkg-config
       - uuid-dev
+      - libcrypto++-dev
+      - libssl-dev
     state: present
 
 - name: fetch the libbdvmi sources
