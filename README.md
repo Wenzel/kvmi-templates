@@ -17,6 +17,11 @@ It is based on Ubuntu 20.04 with the following specifications:
 
 After installing `kvmi-guest` and the guest to be introspected, you will need to reconfigure the two VMs in order to enable introspection, as described in [this article](https://hvmi.github.io/blog/2020/08/10/getting-started-on-kvm.html).
 
+To build the host template:
+~~~
+packer build -var-file kvmi-host.json ubuntu-template.json
+~~~
+
 ## Guest Template
 
 It is based on Ubuntu 20.04 with the following specifications:
@@ -28,6 +33,11 @@ It is based on Ubuntu 20.04 with the following specifications:
  * [hvmi](https://github.com/hvmi/hvmi) installed
 
 It essentially follows the steps described in [this blog post](https://hvmi.github.io/blog/2020/08/10/getting-started-on-kvm.html).
+
+To build the guest template:
+~~~
+packer build -var-file kvmi-guest.json ubuntu-template.json
+~~~
 
 **NOTES**
 
