@@ -12,18 +12,43 @@
 - name: fetch the libbdvmi sources
   git:
     repo: https://github.com/bitdefender/libbdvmi.git
-    dest: /usr/src/libbdvmi
+    dest: /home/demo/libbdvmi
     version: master
+  become: false
 
-- name: build and install libbdvmi
-  shell: |
-    ./bootstrap
-    mkdir build
-    cd build
-    ../configure --prefix=/usr/local --enable-kvmi --enable-optimize
-    make
-    make install
-    cd ..
-    rm -rf build
+- name: bootstrap libbdvmi
+  command: ./bootstrap
   args:
-    chdir: /usr/src/libbdvmi
+    chdir: /home/demo/libbdvmi
+  become: false
+
+- name: create build dir
+  file:
+    path: /home/demo/libbdvmi/build
+    state: directory
+  become: false
+
+- name: configure libbdvmi
+  command: ../configure --prefix=/usr/local --enable-kvmi --enable-optimize
+  args:
+    chdir: /home/demo/libbdvmi/build
+  become: false
+
+- name: build libbdvmi
+  make:
+    chdir: /home/demo/libbdvmi/build
+    params:
+      NUM_THREADS: "{{ ansible_processor_vcpus }}"
+  become: false
+
+- name: install libbdvmi
+  make:
+    chdir: /home/demo/libbdvmi/build
+    target: install
+
+- name: delete build directory
+  file:
+    path: /home/demo/libbdvmi/build
+    state: absent
+  become: false
+

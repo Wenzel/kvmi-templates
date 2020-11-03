@@ -8,24 +8,42 @@
 - name: fetch the hvmi sources
   git:
     repo: https://github.com/hvmi/hvmi.git
-    dest: /usr/src/hvmi
+    dest: /home/demo/hvmi
     version: master
     recursive: yes
+  become: false
 
-- name: install and build hvmi
-  shell: |
-    mkdir build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release ..
-    make
-    make install
-    cd ../daemon
-    mkdir build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release ..
-    make
-    make install
-    cd ..
-    rm -rf build daemon/build
+- name: configure hvmi
+  command: cmake -Bbuild -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release
   args:
-    chdir: /usr/src/hvmi
+    chdir: /home/demo/hvmi
+  become: false
+
+- name: build hvmi
+  command: cmake --build build
+  args:
+    chdir: /home/demo/hvmi
+  become: false
+
+- name: install hvmi
+  command: cmake --build build --target install
+  args:
+    chdir: /home/demo/hvmi
+
+- name: configure hvmi daemon
+  command: cmake -Bbuild -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release
+  args:
+    chdir: /home/demo/hvmi/daemon
+  become: false
+
+- name: build hvmi daemon
+  command: cmake --build build
+  args:
+    chdir: /home/demo/hvmi/daemon
+  become: false
+
+- name: install hvmi daemon
+  command: cmake --build build --target install
+  args:
+    chdir: /home/demo/hvmi/daemon
+

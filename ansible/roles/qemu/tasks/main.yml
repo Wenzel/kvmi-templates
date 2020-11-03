@@ -3,24 +3,42 @@
     name: qemu-kvm
     state: build-dep
 
-# TODO: do as user
 - name: fetch qemu with the KVMI patches
   git:
     repo: https://github.com/KVM-VMI/qemu.git
-    dest: /usr/src/qemu-kvmi
+    dest: /home/demo/qemu
     version: kvmi-v7
+  become: false
 
-- name: build and install the KVMI enabled qemu
-  shell: |
-    mkdir build
-    cd build
-    ../configure --prefix=/usr/local --python=`which python3` --target-list=x86_64-softmmu --disable-werror
-    make -j`nproc`
-    make install
-    cd ..
-    rm -rf build
+- name: create build dir
+  file:
+    path: /home/demo/qemu/build
+    state: directory
+  become: false
+
+- name: configure qemu
+  command: ../configure --prefix=/usr/local --python=`which python3` --target-list=x86_64-softmmu --disable-werror
   args:
-    chdir: /usr/src/qemu-kvmi
+    chdir: /home/demo/qemu/build
+  become: false
+
+- name: build qemu
+  make:
+    chdir: /home/demo/qemu/build
+    params:
+      NUM_THREADS: "{{ ansible_processor_vcpus }}"
+  become: false
+
+- name: install qemu
+  make:
+    chdir: /home/demo/qemu/build
+    target: install
+
+- name: delete build directory
+  file:
+    path: /home/demo/qemu/build
+    state: absent
+  become: false
 
 - name: reconfigure qemu for libvirt
   replace:

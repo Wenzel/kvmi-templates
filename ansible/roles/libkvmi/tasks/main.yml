@@ -1,18 +1,50 @@
+- name: install libkvmi deps
+  package:
+    name: "{{ item }}"
+  with_items:
+    - autoconf
+    - libtool
+
 - name: fetch the libkvmi sources
   git:
     repo: https://github.com/bitdefender/libkvmi.git
-    dest: /usr/src/libkvmi
+    dest: /home/demo/libkvmi
     version: master
+  become: false
 
-- name: build and install libkvmi
-  shell: |
-    ./bootstrap
-    mkdir build
-    cd build
-    ../configure --prefix=/usr/local --enable-optimize
-    make
-    make install
-    cd ..
-    rm -rf build
+- name: bootstrap libkvmi
+  command: ./bootstrap
   args:
-    chdir: /usr/src/libkvmi
+    chdir: /home/demo/libkvmi
+  become: false
+
+- name: create build dir
+  file:
+    path: /home/demo/libkvmi/build
+    state: directory
+  become: false
+
+- name: configure libkvmi
+  command: ../configure --prefix=/usr/local --enable-optimize
+  args:
+    chdir: /home/demo/libkvmi/build
+  become: false
+
+- name: build libkvmi
+  make:
+    chdir: /home/demo/libkvmi/build
+    params:
+      NUM_THREADS: "{{ ansible_processor_vcpus }}"
+  become: false
+
+- name: install libkvmi
+  make:
+    chdir: /home/demo/libkvmi/build
+    target: install
+
+- name: delete build directory
+  file:
+    path: /home/demo/libkvmi/build
+    state: absent
+  become: false
+
