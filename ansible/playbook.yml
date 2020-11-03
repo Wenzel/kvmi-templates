@@ -10,6 +10,11 @@
     - name: update the apt cache
       apt:
         update_cache: yes
+
+    - name: install build essential
+      package:
+        name: build-essential
+        state: present
   roles:
     - kvm
 
