@@ -20,7 +20,7 @@
       "ssh_timeout": "30m",
       "ssh_handshake_attempts": 100,
       "type": "qemu",
-      "vm_name": "kvmi-host",
+      "vm_name": "kvmi-{{ user `image_type`}}.qcow2",
       "boot_wait": "2s",
       "boot_command": [
         "<enter><enter><f6><esc><wait> ",
