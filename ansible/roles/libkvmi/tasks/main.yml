@@ -1,0 +1,18 @@
+- name: fetch the libkvmi sources
+  git:
+    repo: https://github.com/bitdefender/libkvmi.git
+    dest: /usr/src/libkvmi
+    version: master
+
+- name: build and install libkvmi
+  shell: |
+    ./bootstrap
+    mkdir build
+    cd build
+    ../configure --prefix=/usr/local --enable-optimize
+    make
+    make install
+    cd ..
+    rm -rf build
+  args:
+    chdir: /usr/src/libkvmi

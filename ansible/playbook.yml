@@ -18,6 +18,9 @@
   roles:
     - kvm
 
+    - role: libkvmi
+      when: image_type == 'guest'
+
     - role: libbdvmi
       when: image_type == 'guest'
 
