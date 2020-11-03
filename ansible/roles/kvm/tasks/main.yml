@@ -1,12 +1,12 @@
 - name: update the APT cache
   apt:
     update_cache: yes
-  
+
 - name: get the kernel release string
   shell: uname -r
   register: guest_uname
   become: false
-  
+
 - name: install kernel build dependencies
   apt:
     name: linux-image-{{ guest_uname.stdout }}
@@ -34,7 +34,7 @@
     repo: https://github.com/KVM-VMI/kvm.git
     dest: /usr/src/kvmi
     version: kvmi-v7
-      
+
 - name: build and install the KVMI enabled kernel
   shell: |
     yes "" | make oldconfig
@@ -66,16 +66,17 @@
 
 - name: update all initramfs images
   shell: update-initramfs -k all -u
-    
-- name: reboot into the new kernel
-  reboot:
-    reboot_timeout: 300
 
-- name: get the kernel release string
-  shell: uname -r
-  register: uname
-  become: false
-
-- name: displaying kernel version
-  debug:
-    var: uname.stdout
+# disable reboot module as it's broken with Ansible 2.7.7 (Debian Buster)
+  # - name: reboot into the new kernel
+  #   reboot:
+  #     reboot_timeout: 300
+  # 
+  # - name: get the kernel release string
+  #   shell: uname -r
+  #   register: uname
+  #   become: false
+  # 
+  # - name: displaying kernel version
+  #   debug:
+  #     var: uname.stdout
